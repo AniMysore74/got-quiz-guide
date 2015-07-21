@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASOIAF Quiz Helper</title>
+    <link href=
+    "https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.2/css/foundation.min.css"
+    rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <script></script>
+</head>
+
+<body>
+    <div class="row search">
+        <header class="label left">Ice and Fire Quiz Helper</header>
+        <header class="label secondary right">by <a href="http://thenewcon.com/about">AniMysore</a></header> 
+        <div class="large-12 columns">
+            <form>                      
+            	<div class="row">
+			        <div class="large-12 columns">
+			            <div class="row collapse">
+			                <div class="small-10 columns">
+			                    <input placeholder="Enter term" name="searchField" type="text">
+			                </div>
+
+			                <div class="small-2 columns">
+			                    <input class="button postfix" type="button" onClick="formHandler(this.form,'Enter Term')" value="Go">
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+                <div class="row">
+                    <div class="large-4 columns">
+                        <label>Search</label> 
+                        <input id="radIni" name="rad" value="initials" type="radio"><label for="radIni">Initials</label>
+                        <input id="radHan" name="rad" value="hangmen" type="radio"><label for="radHan">Hangmen</label>
+                        <input id="radAna" name="rad" value="anagrams" type="radio"><label for="radAna">Anagram</label>
+                    </div>
+                    <div class="large-3 columns">
+                        <label>Categories</label>
+                        <input name="names" id="names" type="checkbox">
+                            <label for="names">Names</label> 
+                    </div>
+                    <div class="large-4 columns">
+                        <label>Categories coming soon</label>
+                       	<span class="radius secondary label">Titles/Aliases</span>
+                    	<span class="radius secondary label">Objects</span>
+                        <span class="radius secondary label">Places</span>
+                        <span class="radius secondary label">Events</span>
+                    </div>
+                </div>
+			</form>
+        </div>
+    </div>
+    <div class="row results">
+        <div class="large-12 columns">
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/script.js"></script>
+</body>
+</html>
