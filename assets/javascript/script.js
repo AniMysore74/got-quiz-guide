@@ -1,5 +1,5 @@
 var chars;
-$.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/master/assets/json/chars.json", function(data) {
+$.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/chars.json", function(data) {
   	chars = data;
 })
   .done(function() {
@@ -21,11 +21,11 @@ $.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/master/
 				return;
 			//Checks if Form is ready for processing
 		(function blankchecker(){
-			if(!form.rad.checked){
+			if(!form.rad[0].checked){
 				display("Please choose how you want to search");
 				return;
 			}
-			if(!form.names.checked && !form.alias.checked && !form.objects.checked) {
+			if(!form.names.checked) {
 				display("Please choose what to search from");
 				return;
 			}
@@ -34,12 +34,12 @@ $.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/master/
 				return;
 			}
 		})();
- 		if(form.radIni.checked)
+ 		if(form.rad[0].checked)
  			initialsSearch(form);
- 		else if(form.radHan.checked)
- 			hangmanSearch(form);
- 		else if(form.radAna.checked)
- 			anagramSearch(form);
+ 		else if(form.rad[1].checked)
+ 			hangmanSearch();
+ 		else if(form.rad[2].checked)
+ 			anagramSearch();
  	}
 
 	function initialsSearch(form)
@@ -74,7 +74,7 @@ $.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/master/
 			    }
 				if(flag){
 					console.log(chars[x].name);
-					display(x,{name:true,description:true});
+					display(null,x,{name:true,description:true});
 					count++;
 				}
 				else	
@@ -112,10 +112,12 @@ $.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/master/
 		$('.results').addClass('show');
 		$('<div class = "panel"> Nothing Found! Valar Morghulis </div>').appendTo('.results .columns');
 	}
-	function display(pos, params){
+	function display(text, pos, params){
 		$('.results').removeClass('show');
 		$('.results').addClass('show');
-		if(params.name && params.description && chars[pos].description!="")
+		if(text!==null)
+			$('<div class = "panel">'+text+'</div>').appendTo('.results .columns');
+		else if(params.name && params.description && chars[pos].description!="")
 			$('<div class = "panel"><span class = "name">'+chars[pos].name+'</span>'+" "+chars[pos].description+'</div>').appendTo('.results .columns');
 		else if(params.name)
 			$('<div class = "panel"><span class = "name">'+chars[pos].name+'</span></div>').appendTo('.results .columns');
