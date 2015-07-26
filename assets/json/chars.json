@@ -120,7 +120,7 @@
     "description":" A Knight Third Son Of Lord Walder Frey. "
   },
   {
-    "name":"Aenys I Targaryen",
+    "name":"Aenys Targaryen",
     "description":" Aegon The Conqueror's Son. "
   },
   {
@@ -132,11 +132,11 @@
     "description":" Called Damphair Eighth Son Of Lord Quellon Greyjoy And A Priest Of The Drowned God. "
   },
   {
-    "name":"Aerys I Targaryen",
+    "name":"Aerys Targaryen",
     "description":" Second Son Of King Daeron Ii Succeeded By His Younger Brother Maekar. "
   },
   {
-    "name":"Aerys II Targaryen",
+    "name":"Aerys Targaryen",
     "description":" Last Targaryen King Also Known As 'The Mad King'. "
   },
   {
@@ -2864,8 +2864,8 @@
     "description":" Heir Of The Lonely Light."
   },
   {
-    "name":"Gyles III Gardener",
-    "description":" King In The Reach."
+    "name":"Gyles Gardener",
+    "description":" Gyles III. King In The Reach."
   },
   {
     "name":"Gyles Grafton",
