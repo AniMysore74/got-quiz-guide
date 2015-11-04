@@ -1,6 +1,6 @@
 #Quizzing Guide for ASOIAF 
 
-This is a handy web app for extreme ASOIAF quizzers. Lets you search for initaials, hangmen, and anagrams.
+This is a handy web app for extreme ASOIAF quizzers. Lets you search for initials, hangmen, and anagrams.
 
 ##Planned features
  
