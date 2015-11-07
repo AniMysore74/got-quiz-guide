@@ -1,7 +1,7 @@
-body { 
+body {
 	background: rgba(20, 20, 20, 1) center no-repeat fixed;
 	background-size: cover;
-	background-image: url('http://randomcelebs.com/wp-content/uploads/2015/03/House-Stark-Wallpaper-11.jpg');
+	background-image: url('../bg.jpg');
 	height: 100vh;
 }
 

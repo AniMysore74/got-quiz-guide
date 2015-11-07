@@ -8,25 +8,50 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
+
 //----------------------------------------------------------------------//
 //					 1) Initializtion of Resources
 //----------------------------------------------------------------------//
 //Initialize Foundation
- $(document).foundation();
+$(document).foundation();
 
 // Global Variables to store Data
-var chars,sorted;
-
+var DATA, CHARS, OBJECTS, PLACES, EVENTS, SORTED;
 //Loading JSON Files
-$.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/chars.json", function(data) {
-  	chars = data;
+$.getJSON("https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/chars.json", function(data) {
+    CHARS = data;
 })
 .done(function() {
-    $.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/sorted.json", function(data) {
-	  sorted = data;
-	})
+    $.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/chars.json", function(data) {
+	  OBJECTS = data;
+	}  )
 	.done(function() {
-		jsonloadmsg(true);
+		$.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/chars.json", function(data) {
+		  PLACES = data;
+		})
+		.done(function() {
+			$.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/chars.json", function(data) {
+			  EVENTS = data;
+			})
+			.done(function() {
+				$.getJSON( "https://raw.githubusercontent.com/AniMysore74/got-quiz-guide/gh-pages/assets/json/sorted.json", function(data) {
+				  SORTED = data;
+				})
+				.done(function() {
+					jsonloadmsg(true);
+                     DATA = new Array(CHARS,OBJECTS,PLACES,EVENTS,SORTED);
+				})
+				.fail(function() {
+					jsonloadmsg(false);
+				})
+			})
+			.fail(function() {
+				jsonloadmsg(false);
+			})
+		})
+		.fail(function() {
+			jsonloadmsg(false);
+		})
 	})
 	.fail(function() {
 		jsonloadmsg(false);
@@ -45,29 +70,17 @@ function jsonloadmsg(flag) {
 		$('.lander .message').text(" Error Loading Databases. Please refresh your browser.")
 	}
 }
+// Stop page redirects on pressing Enter key
 $('.searchField').keypress(function( event ) {
-  if(event.keyCode == 13){ 
+  if(event.keyCode == 13){
    event.preventDefault();
  }
 });
-$('.password').keypress(function( event ) {
-  if(event.keyCode == 13){ 
-   event.preventDefault();
- }
-});
-//--------------------		1A) LOCKER FEATURE		--------------------//
-function pass(form) {
-	var p = "DaKingInDaNawth";
-	if(form.password.value=p)
-		$('.locker').fadeOut(100).hide(100);
-	return false;
-}
-
 //----------------------------------------------------------------------//
 //							 2) Form Handling
 //----------------------------------------------------------------------//
 function formHandler(form){
-	//Upon receving form, clear previous reults 
+	//Upon receving form, clear previous reults
 	$(".results .columns").empty();
 
 	//Checks if Form is ready for processing
@@ -84,26 +97,50 @@ function formHandler(form){
 		return;
 	}
 
+	//Processing Form
+	var params = new Object();
+	if(form.names.checked)
+		params.names=true;
+	else if(form.objects.checked)
+		params.objects=true;
+	else if(form.places.checked)
+		params.places=true;
+	else if(form.events.checked)
+		params.events=true;
+
 	//Calls search functions
-	if(form.rad[0].checked)
-		initialsSearch(form.searchField.value);
-	else if(form.rad[1].checked)
-		hangmanSearch(form.searchField.value);
-	else if(form.rad[2].checked)
-		anagramSearch(form.searchField.value);
-	return false;
+	for(var x in params)
+	{
+		if(x==="names")	category = 0;
+		if(x==="objects") category = 1;
+		if(x==="places") category = 2;
+		if(x==="events") category = 3;
+		if(x==="alias")	category = -1
+		if(params[x])
+		{
+				if(form.rad[0].checked)
+					initialsSearch(form.searchField.value,category);
+				else if(form.rad[1].checked)
+					hangmanSearch(form.searchField.value,category);
+				else if(form.rad[2].checked)
+					anagramSearch(form.searchField.value);
+				return false;
+		}
+	}
 }
 //----------------------------------------------------------------------//
 //					 	3) Searching For Initals
 //----------------------------------------------------------------------//
-function initialsSearch(initials)
+function initialsSearch(initials, category)
 {
 	var searchCounter = 0;
-
-		for(var x in chars){
-			var check= chars[x].name.split(" ");
-			var flag=true;   
-			if(!(initials.length!==check.length)){		
+	if(category < 0)
+		searchCounter = aliasInitials(initials,category);
+	else{
+		for(var x in DATA[category]){
+			var check= DATA[category][x].name.split(" ");
+			var flag=true;
+			if(!(initials.length!==check.length)){
 				for(var y in check){
 					if(check[y].charAt(0)!==initials.charAt(y).toLocaleUpperCase()){
 							flag=false;
@@ -112,15 +149,42 @@ function initialsSearch(initials)
 		    }
 		    else
 		    {
-		    	flag=false;		    
+		    	flag=false;
 		    }
 			if(flag){
-				display({dataObject:true,name:true,description:true},chars[x]);
+				display({dataObject:true,name:true,description:true},DATA[category][x]);
 				searchCounter++;
 			}
 		}
+	}
 	if(!searchCounter){
 		display({noResult:true});
+	}
+}
+function aliasInitials(initials,category)
+{
+	var searchCounter = 0;
+	for(var x in DATA[category]){
+		for(var y in DATA[category][x].alias){
+			var check= DATA[category][x].alias[y].split(" ").toLocaleUpperCase;
+			var flag=true;
+			if(!(initials.length!==check.length)){
+				for(var z in check){
+					if(check[z].charAt(0)!==initials.charAt(z).toLocaleUpperCase()){
+							flag=false;
+					}
+		        }
+		    }
+		    else
+		    {
+		    	flag=false;
+		    }
+			if(flag){
+				display({dataObject:true,name:true,description:true},DATA[category][x].alias[y]);
+				searchCounter++;
+			}
+		}
+		return searchCounter;
 	}
 }
 //----------------------------------------------------------------------//
@@ -131,43 +195,51 @@ function initialsSearch(initials)
 function escapeRegExp(string) {
 	   return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
-
+function replaceAll(string, find, replace) {
+  return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
 function attempt (pattern, guess)
 {
     if (pattern.exec(guess) != null) return true;
-    if (pattern.exec(guess.replace("The ", "")) != null) return true;
-    if (pattern.exec(guess.replace("&", "and")) != null) return true;
-    if (pattern.exec(guess.replace("'", "")) != null) return true;
-    if (pattern.exec(guess.replace(",", "")) != null) return true;
-    if (pattern.exec(guess.replace(":", "")) != null) return true;
-    if (pattern.exec(guess.replace("-", "")) != null) return true;
-    if (pattern.exec(guess.replace(".", "")) != null) return true;
-    if (pattern.exec(guess.replace("/", "")) != null) return true;
-    if (pattern.exec(guess.replace("The ", "").replace("&", "and")) != null) return true;
+    if (pattern.exec(replaceAll("The ", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll("&", "and",guess)) != null) return true;
+    if (pattern.exec(replaceAll("'", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll(",", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll(":", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll("-", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll(".", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll("/", "",guess)) != null) return true;
+    if (pattern.exec(replaceAll("The ", "", replaceAll("&", "and",guess)) != null)) return true;
     return false;
 }
 
 // Uses _ as blank characters, * as wildcards
-function hangmanSearch(blanked)
+function hangmanSearch(blanked,category)
 {
 	var searchCounter = 0;
-   	// Build into regex
-    blanked = blanked.replace("_", "[a-z]");
-    pattern = new RegExp(blanked, "i");
-    for (var i in chars)
-    {
-        var guess = chars[i].name;
-        if (blanked.length >= guess.length)
-        {
-            if (attempt(pattern, guess))
-            {
-            	display({dataObject:true,name:true},chars[i].name);
-            	searchCounter++;
-            }
-        }
-    }
-    if(!searchCounter)
-    	display({noResult:true})
+	if(category < 0)
+		return;
+	else{
+	   	// Build into regex
+	    blanked = replaceAll("_", "[a-z]",blanked);
+	    pattern = new RegExp(blanked, "i");
+	    console.log(pattern);
+	    for (var i in DATA[category])
+	    {
+	        var guess = DATA[category][i].name;
+	        if (blanked.length >= guess.length)
+	        {
+	        	console.log(attempt(pattern,guess));
+	            if (attempt(pattern, guess))
+	            {
+	            	display({dataObject:true,name:true},DATA[category][i].name);
+	            	searchCounter++;
+	            }
+	        }
+	    }
+	}
+	if(!searchCounter)
+	    display({noResult:true})
 }
 //----------------------------------------------------------------------//
 //					 	5) Searching for Anagrams 						//
@@ -176,11 +248,11 @@ function anagramSearch(inputAnagram)
 {
 	var searchCounter=0;
 	var anagramSorted= inputAnagram.toLocaleUpperCase().split('').sort().join('').trim();
-	for(var x in sorted)
+	for(var x in SORTED)
 	{
-		if(sorted[x].sort===anagramSorted)
+		if(SORTED[x].sort===anagramSorted)
 		{
-			display({dataObject:true,name:true},sorted[x])
+			display({dataObject:true,name:true},SORTED[x])
 			searchCounter++;
 		}
 	}
